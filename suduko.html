@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Suduko Validator</title>
+</head>
+<body>
+<div class ="wrapper">
+<div class="suduko">
+</div>
+<button onclick="validateSuduko()">
+Validate</button>
+<button onclick="init()">
+Load Random</button>
+</div>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+outline:none;
+}
+.wrapper{
+position:absolute;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background-color:#eee;
+}
+.suduko{
+display:grid;
+grid-gap:2px;
+padding:0.5rem;
+grid-template-columns:repeat(9,1fr);
+grid-template-rows:repeat(9,1fr);
+width:200px;
+height:200px;
+background-color:#fff;
+border-raidus:3px;
+box-shadow:0 0 2px rgba(0,0,0,.35);
+}
+.suduko input{
+min-width:10px;
+text-align:center;
+border:1px solid #fff000;
+}
+button{
+margin-top:10px;
+width:120px;
+height:60px;
+border-radius:3px;
+background-color:#303030;
+color:#fff;
+border:none;
+}
+button:active{
+background-color:#454545;
+}
+</style>
+<script>
+window.onload=init;
+var suduko=[];
+var all=[
+[[3,5,2,9,1,8,6,7,4],
+[8,9,7,2,4,6,5,1,3],
+[6,4,1,7,5,3,2,8,9],
+[7,8,3,5,6,9,4,2,1],
+[9,2,6,1,3,4,7,5,8],
+[4,1,5,8,2,7,9,3,6],
+[1,6,4,3,7,5,8,9,2],
+[2,7,8,4,9,1,3,6,5],
+[5,3,9,6,8,2,1,4,7]],
+
+[[3,5,2,9,1,8,6,7,4],
+[8,9,7,2,4,1,5,1,3],
+[6,4,1,7,5,3,2,8,9],
+[7,8,3,5,6,9,4,2,1],
+[9,2,6,1,3,4,7,5,8],
+[4,1,5,8,2,7,9,3,6],
+[8,6,4,3,7,5,8,2,2],
+[2,7,8,4,9,1,3,6,5],
+[5,3,9,6,8,2,1,4,7]],
+
+[[3,5,2,9,1,8,6,7,4],
+[8,9,7,2,4,6,5,1,3],
+[6,4,1,7,5,3,2,8,9],
+[7,8,3,5,6,9,4,2,1],
+[9,2,6,1,3,4,7,5,8],
+[4,1,5,8,2,7,9,3,6],
+[8,6,4,3,7,5,8,9,2],
+[2,7,8,4,9,1,3,6,5],
+[5,3,9,6,8,2,1,4,7]],
+
+[[3,5,2,9,1,8,6,7,4],
+[8,9,7,2,4,6,5,1,3],
+[6,4,1,7,5,3,2,8,9],
+[7,8,3,5,6,9,4,2,1],
+[9,2,6,1,3,4,7,5,8],
+[4,1,5,8,2,7,9,3,6],
+[8,6,4,3,7,5,8,9,2],
+[2,7,8,4,9,1,3,6,5],
+[5,3,9,6,8,2,1,4,7]],
+
+[]
+];
+function init(){
+var s=document.querySelector(".suduko");
+s.innerHTML="";
+for(var i=0;i<81;i++)
+{
+s.innerHTML+=`<input type="text" oninput="checkInput(this)"/>`;
+}
+for(var j=0;j<9;j++){
+suduko.push([]);
+for(var i=0;i<9;i++){
+suduko[j].push(" ");
+}
+}
+var n=Math.floor(Math.random()*5);
+loadSuduko(all[n]);
+}
+function loadSuduko(s){
+var n=document.querySelectorAll("input")
+for(var j=0;j<9;j++){
+for(var i=0;i<9;i++){
+n[j*9+i].value=s[j][i];
+}
+}
+}
+function checkInput(input){
+var val=input.value;
+if(val.length>1){
+val=val.slice(0,1);
+}
+if(val.match("[1-9]")==null){
+val="";
+}
+input.value=val;
+}
+function makeSuduko(){
+var n=document.querySelectorAll("input");
+for(var j=0;j<9;j++){
+for(var i=0;i<9;i++){
+suduko[j][i]=n[j*9+i].value;
+}
+}
+}
+function validateSuduko(){
+makeSuduko();
+var n=document.querySelectorAll("input");
+for(var j=0;j<9;j++){
+for(var i=0;i<9;i++){
+n[j*9+i].style.backgroundColor="#66bb6a";
+n[j*9+i].style.color="#fff";
+if(!isSafe(j,i)&&suduko[j][i]!==""){
+n[j*9+i].style.backgroundColor="red";
+}
+else{
+n[j*9+i].style.backgroundColor="green";
+}
+}
+}
+}
+function isSafe(y,x){
+var d=suduko[y][x];
+for(var i=0; i<9;i++){
+if(i!=x&& suduko[y][i]==d){
+return false;
+}
+if(i!=y&&suduko[i][x]==d){
+return false;
+}
+}
+var bx=(x-(x%3));
+var by=(y-(y%3));
+for(var j=by;j<by;j++){
+for(var i=bx;i<bx;i++){
+if(j!=y&&i!=x&&suduko[j][i]==d){
+return false;
+}
+}
+}
+return true;
+}
+</script>
+</body>
+</html>
